@@ -4,6 +4,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+### files with credentials or other sensitive data ###
+application-prod.properties
+
 ### STS ###
 .apt_generated
 .classpath

@@ -50,3 +50,52 @@ mvn spring-boot:run -Dspring-boot.run.profiles=local
 ```
 
 Replace `local` with `prod` to use the production profile.
+
+### Iteration 3: Database Integration
+
+In this iteration, the application was updated to integrate with a database. The following changes were made:
+
+1. **Database Configuration**:
+   - Added support for H2 (local profile) and MariaDB (dev and production profile), introducing a new dev profile to develop with a local MariaDB.
+   - Updated the `application.properties`, `application-dev.properties` and `application-prod.properties.example` files to include database configurations - the latter must be copied to `application-prod.properties` first (which then is excluded from git via `.gitignore`).
+   - To install and start MariaDB on a Mac, use
+
+      ```sh
+      brew install mariadb
+      brew services start mariadb
+      ```
+
+   - To setup a user and a new database, first open mysql console with `sudo mysql`, then run the following commands:
+
+      ```sql
+      CREATE DATABASE saitenweise;
+      CREATE USER 'user'@'localhost' IDENTIFIED BY 'deinpasswort';
+      GRANT ALL PRIVILEGES ON saitenweise.* TO 'user'@'localhost';
+      FLUSH PRIVILEGES;
+      ```
+
+2. **Dependencies**:
+   - Added dependencies for H2 and MariaDB in the `pom.xml` file.
+
+3. **Product Entity**:
+   - The `Product` class was annotated with JPA annotations to map it to a database table.
+   - Added missing `equals` and `hashCode` methods.
+   - Added a `toString` method for better debugging.
+
+4. **Product Repository**:
+   - A new `ProductRepository` interface was created to handle database operations for the `Product` entity.
+
+5. **Data Loader**:
+   - `config.DataLoader` is a CommandLineRunner that is run during application startup and used to fill initial data into the database. It is only run when no products are defined yet.
+
+6. **Product Controller**:
+   - Updated the `/api/product` endpoint to fetch products from the database instead of returning hardcoded values.
+
+7. **Testing**:
+   - Enabled the `test` profile for tests by adding the `@ActiveProfiles("test")` annotation in the test class.
+
+To run the application with database integration, ensure the database is set up and the appropriate profile is activated. For example, to use the local profile:
+
+```sh
+mvn spring-boot:run -Dspring-boot.run.profiles=local
+```
