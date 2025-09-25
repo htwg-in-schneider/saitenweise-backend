@@ -31,3 +31,7 @@ The application will start on `http://localhost:8081`.
 
 - introduced model classes `Product` and `Category`
 - `ProductController` returns some example data that can be consumed by the frontend
+
+### Iteration 2: CORS Configuration
+
+In this iteration, a `WebConfig` for a global CORS (Cross-Origin Resource Sharing) configuration was added to the backend. This allows the frontend application, which may be served from a different origin, to access the backend APIs without running into cross-origin issues.
