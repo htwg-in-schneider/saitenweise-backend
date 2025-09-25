@@ -99,3 +99,7 @@ To run the application with database integration, ensure the database is set up 
 ```sh
 mvn spring-boot:run -Dspring-boot.run.profiles=local
 ```
+
+### Iteration 4: CORS Configuration
+
+In this iteration, a `WebConfig` for a global CORS (Cross-Origin Resource Sharing) configuration was added to the backend. This allows the frontend application, which may be served from a different origin, to access the backend APIs without running into cross-origin issues.
