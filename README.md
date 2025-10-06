@@ -103,3 +103,8 @@ mvn spring-boot:run -Dspring-boot.run.profiles=local
 ### Iteration 4: CORS Configuration
 
 In this iteration, a `WebConfig` for a global CORS (Cross-Origin Resource Sharing) configuration was added to the backend. This allows the frontend application, which may be served from a different origin, to access the backend APIs without running into cross-origin issues.
+
+### Iteration 5: Added GitHub Actions workflow for Maven build verification
+
+- compiles project and runs tests
+- see `.github/workflows/verify.yml`
