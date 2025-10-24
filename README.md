@@ -108,3 +108,16 @@ In this iteration, a `WebConfig` for a global CORS (Cross-Origin Resource Sharin
 
 - compiles project and runs tests
 - see `.github/workflows/verify.yml`
+
+### Iteration 6: CRUD for Products (and tests)
+
+In this iteration the backend was extended to support full CRUD operations for products.
+
+- CRUD Endpoints (REST)
+  - GET /api/product — list all products
+  - GET /api/product/{id} — fetch a single product (404 if not found)
+  - POST /api/product — create a product (returns 201)
+  - PUT /api/product/{id} — update an existing product (404 if not found)
+  - DELETE /api/product/{id} — delete a product (204 on success, 404 if not found)
+- Tests: Unit tests for ProductController and repository behavior (uses in memory H2 database)
+- No Validation: Entities are not validated before written to the database!
