@@ -1,22 +1,20 @@
-package de.htwg.in.schneider.saitenweise.backend.config;
+package de.htwg.in.wete.backend.config;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
-import de.htwg.in.schneider.saitenweise.backend.model.Category;
-import de.htwg.in.schneider.saitenweise.backend.model.Product;
-import de.htwg.in.schneider.saitenweise.backend.model.Review;
-import de.htwg.in.schneider.saitenweise.backend.repository.ProductRepository;
-import de.htwg.in.schneider.saitenweise.backend.repository.ReviewRepository;
+import de.htwg.in.wete.backend.model.Category;
+import de.htwg.in.wete.backend.model.Product;
+import de.htwg.in.wete.backend.model.Review;
+import de.htwg.in.wete.backend.repository.ProductRepository;
+import de.htwg.in.wete.backend.repository.ReviewRepository;
 
 import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Configuration
-@Profile("!test")
 public class DataLoader {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DataLoader.class);

@@ -1,4 +1,4 @@
-package de.htwg.in.schneider.saitenweise.backend.model;
+package de.htwg.in.wete.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

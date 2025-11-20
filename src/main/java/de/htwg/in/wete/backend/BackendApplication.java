@@ -1,13 +1,13 @@
-package de.htwg.in.schneider.saitenweise.backend;
+package de.htwg.in.wete.backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SaitenweiseBackendApplication {
+public class BackendApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SaitenweiseBackendApplication.class, args);
+		SpringApplication.run(BackendApplication.class, args);
 	}
 
 }

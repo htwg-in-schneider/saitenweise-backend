@@ -1,12 +1,12 @@
-package de.htwg.in.schneider.saitenweise.backend.controller;
+package de.htwg.in.wete.backend.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import de.htwg.in.schneider.saitenweise.backend.model.Product;
-import de.htwg.in.schneider.saitenweise.backend.repository.ProductRepository;
+import de.htwg.in.wete.backend.model.Product;
+import de.htwg.in.wete.backend.repository.ProductRepository;
 
 import org.springframework.http.ResponseEntity;
 
