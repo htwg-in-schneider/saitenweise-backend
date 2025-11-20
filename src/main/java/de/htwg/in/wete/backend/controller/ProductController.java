@@ -11,6 +11,7 @@ import de.htwg.in.wete.backend.repository.ProductRepository;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/product")
@@ -39,35 +40,39 @@ public class ProductController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product productDetails) {
-        return productRepository.findById(id)
-                .map(product -> {
-                    product.setCategory(productDetails.getCategory());
-                    product.setDescription(productDetails.getDescription());
-                    product.setImageUrl(productDetails.getImageUrl());
-                    product.setPrice(productDetails.getPrice());
-                    product.setTitle(productDetails.getTitle());
-                    Product updatedProduct = productRepository.save(product);
-                    LOG.info("Updated product with id " + updatedProduct.getId());
-                    return ResponseEntity.ok(updatedProduct);
-                })
-                .orElse(ResponseEntity.notFound().build());
+        Optional<Product> opt = productRepository.findById(id);
+        if (!opt.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        Product product = opt.get();
+        product.setCategory(productDetails.getCategory());
+        product.setDescription(productDetails.getDescription());
+        product.setImageUrl(productDetails.getImageUrl());
+        product.setPrice(productDetails.getPrice());
+        product.setTitle(productDetails.getTitle());
+        Product updatedProduct = productRepository.save(product);
+        LOG.info("Updated product with id " + updatedProduct.getId());
+        return ResponseEntity.ok(updatedProduct);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteProduct(@PathVariable Long id) {
-        return productRepository.findById(id)
-                .map(product -> {
-                    productRepository.delete(product);
-                    LOG.info("Deleted product with id " + id);
-                    return ResponseEntity.noContent().build();
-                })
-                .orElse(ResponseEntity.notFound().build());
+        Optional<Product> opt = productRepository.findById(id);
+        if (!opt.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        productRepository.delete(opt.get());
+        LOG.info("Deleted product with id " + id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Long id) {
-        return productRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Optional<Product> opt = productRepository.findById(id);
+        if (opt.isPresent()) {
+            return ResponseEntity.ok(opt.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
