@@ -145,3 +145,10 @@ In this iteration the backend was extended to support full CRUD operations for p
   - this and other example requests can be found in `src/test/bruno` which can be opened with the [Bruno API Client](https://www.usebruno.com/).
 - In `DataLoader`, some example reviews are added to the database.
 - No tests have been written for review controller. However, the existing tests for ProductController still run fine.
+
+## Iteration 8: Search and filter products
+
+- Added request parameters `name` and `category` in `ProductController#getProducts` to search by name and filter by category
+- Added corresponding repository methods
+- Added tests
+- Added endpoint to list all categories (and their German translations) to make them available for selection in the client, see `CategoryController`.

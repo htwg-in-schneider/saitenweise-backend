@@ -70,6 +70,108 @@ public class ProductControllerTest {
     }
 
     @Test
+    public void testGetProductsByName() throws Exception {
+        // GIVEN: Multiple products in the database
+        Product p1 = new Product();
+        p1.setTitle("Nice Violin");
+        p1.setDescription("A fine acoustic violin.");
+        p1.setCategory(Category.VIOLIN);
+        p1.setPrice(800.0);
+        p1.setImageUrl("https://example.com/violin.jpg");
+        productRepository.save(p1);
+
+        Product p2 = new Product();
+        p2.setTitle("Nice Cello");
+        p2.setDescription("A cool cello.");
+        p2.setCategory(Category.CELLO);
+        p2.setPrice(1200.0);
+        p2.setImageUrl("https://example.com/cello1.jpg");
+        productRepository.save(p2);
+
+        Product p3 = new Product();
+        p3.setTitle("Ugly Cello");
+        p3.setDescription("An ugly cello.");
+        p3.setCategory(Category.CELLO);
+        p3.setPrice(100000.0);
+        p3.setImageUrl("https://example.com/cello2.jpg");
+        productRepository.save(p3);
+
+        // WHEN: Products are requested with name filter
+        mockMvc.perform(get("/api/product")
+                .param("name", "Nice"))
+                // THEN: Only the matching product is returned
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].title").value("Nice Violin"))
+                .andExpect(jsonPath("$[1].title").value("Nice Cello"))
+                .andExpect(jsonPath("$.length()").value(2));
+    }
+
+    @Test
+    public void testGetProductsByCategory() throws Exception {
+        // GIVEN: Multiple products in the database
+        Product p1 = new Product();
+        p1.setTitle("Violin Model A");
+        p1.setDescription("A violin.");
+        p1.setCategory(Category.VIOLIN);
+        p1.setPrice(1000.0);
+        p1.setImageUrl("https://example.com/violin_a.jpg");
+        productRepository.save(p1);
+
+        Product p2 = new Product();
+        p2.setTitle("Cello Model B");
+        p2.setDescription("A cello.");
+        p2.setCategory(Category.CELLO);
+        p2.setPrice(2000.0);
+        p2.setImageUrl("https://example.com/cello_b.jpg");
+        productRepository.save(p2);
+
+        // WHEN: Products are requested with category filter
+        mockMvc.perform(get("/api/product")
+                .param("category", "VIOLIN"))
+                // THEN: Only the matching product is returned
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].title").value("Violin Model A"))
+                .andExpect(jsonPath("$.length()").value(1));
+    }
+
+    @Test
+    public void testGetProductsByNameAndCategory() throws Exception {
+        // GIVEN: Multiple products in the database
+        Product p1 = new Product();
+        p1.setTitle("Classic Violin");
+        p1.setDescription("A classic violin.");
+        p1.setCategory(Category.VIOLIN);
+        p1.setPrice(1100.0);
+        p1.setImageUrl("https://example.com/classic_violin.jpg");
+        productRepository.save(p1);
+
+        Product p2 = new Product();
+        p2.setTitle("Modern Violin");
+        p2.setDescription("A modern violin.");
+        p2.setCategory(Category.VIOLIN);
+        p2.setPrice(1300.0);
+        p2.setImageUrl("https://example.com/modern_violin.jpg");
+        productRepository.save(p2);
+
+        Product p3 = new Product();
+        p3.setTitle("Classic Cello");
+        p3.setDescription("A classic cello.");
+        p3.setCategory(Category.CELLO);
+        p3.setPrice(2100.0);
+        p3.setImageUrl("https://example.com/classic_cello.jpg");
+        productRepository.save(p3);
+
+        // WHEN: Products are requested with both name and category filter
+        mockMvc.perform(get("/api/product")
+                .param("name", "Classic")
+                .param("category", "VIOLIN"))
+                // THEN: Only the matching product is returned
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].title").value("Classic Violin"))
+                .andExpect(jsonPath("$.length()").value(1));
+    }
+
+    @Test
     public void testGetProductById() throws Exception {
         // GIVEN: Product is available in database
         Product product = new Product();
