@@ -8,10 +8,14 @@ import org.springframework.context.annotation.Profile;
 import de.htwg.in.schneider.saitenweise.backend.model.Category;
 import de.htwg.in.schneider.saitenweise.backend.model.Product;
 import de.htwg.in.schneider.saitenweise.backend.model.Review;
+import de.htwg.in.schneider.saitenweise.backend.model.User;
+import de.htwg.in.schneider.saitenweise.backend.model.Role;
 import de.htwg.in.schneider.saitenweise.backend.repository.ProductRepository;
 import de.htwg.in.schneider.saitenweise.backend.repository.ReviewRepository;
+import de.htwg.in.schneider.saitenweise.backend.repository.UserRepository;
 
 import java.util.Arrays;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,18 +26,46 @@ public class DataLoader {
     private static final Logger LOGGER = LoggerFactory.getLogger(DataLoader.class);
 
     @Bean
-    public CommandLineRunner loadData(ProductRepository repository, ReviewRepository reviewRepository) {
+    public CommandLineRunner loadData(UserRepository userRepository, ProductRepository productRepository, ReviewRepository reviewRepository) {
         return args -> {
-            if (repository.count() == 0) { // Check if the repository is empty
+            loadInitialUsers(userRepository);
+
+            // only load products and reviews if none exist
+            if (productRepository.count() == 0) { // Check if the repository is empty
                 LOGGER.info("Database is empty. Loading initial data...");
-                loadInitialData(repository, reviewRepository);
+                loadInitialData(productRepository, reviewRepository);
             } else {
                 LOGGER.info("Database already contains data. Skipping data loading.");
             }
         };
     }
 
-    private void loadInitialData(ProductRepository repository, ReviewRepository reviewRepository) {
+    private void loadInitialUsers(UserRepository userRepository) {
+        upsertUser(userRepository, "Johannes Schneider", "jsdump123+1@gmail.com", "auth0|69248a03c95661c67b55fe61", Role.REGULAR);
+        upsertUser(userRepository, "Admin User", "jsdump123+admin@gmail.com", "auth0|6925d3052f196223d506f863", Role.ADMIN);
+    }
+
+    private void upsertUser(UserRepository userRepository, String name, String email, String oauthId, Role role) {
+        Optional<User> existing = userRepository.findByEmail(email);
+        if (existing.isPresent()) {
+            User e = existing.get();
+            e.setName(name);
+            e.setOauthId(oauthId);
+            e.setRole(role);
+            userRepository.save(e);
+            LOGGER.info("Updated existing {} user with email={}", role, email);
+        } else {
+            User u = new User();
+            u.setName(name);
+            u.setEmail(email);
+            u.setOauthId(oauthId);
+            u.setRole(role);
+            userRepository.save(u);
+            LOGGER.info("Created new {} user with email={}", role, email);
+        }
+    }
+
+    private void loadInitialData(ProductRepository productRepository, ReviewRepository reviewRepository) {
         Product violin = new Product();
         violin.setTitle("Geige Modell Paganini");
         violin.setDescription("Eine hochwertige Geige, welche schon alle Konzerthäuser dieser Welt gesehen hat.");
@@ -43,7 +75,8 @@ public class DataLoader {
 
         Product doubleBass = new Product();
         doubleBass.setTitle("Kontrabass Modell Maestro");
-        doubleBass.setDescription("Ein professioneller Kontrabass, für Klassik- und Jazz geeignet, optimal eingestellt.");
+        doubleBass
+                .setDescription("Ein professioneller Kontrabass, für Klassik- und Jazz geeignet, optimal eingestellt.");
         doubleBass.setCategory(Category.DOUBLE_BASS);
         doubleBass.setPrice(3500.00);
         doubleBass.setImageUrl("https://neshanjo.github.io/saitenweise-images/doublebass_pro.jpg");
@@ -55,7 +88,7 @@ public class DataLoader {
         strings.setPrice(30.00);
         strings.setImageUrl("https://neshanjo.github.io/saitenweise-images/accessory_violin_strings.jpg");
 
-        repository.saveAll(Arrays.asList(violin, doubleBass, strings));
+        productRepository.saveAll(Arrays.asList(violin, doubleBass, strings));
 
         // Add reviews
         Review r1a = new Review();
