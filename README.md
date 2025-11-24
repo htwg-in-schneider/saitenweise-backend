@@ -152,3 +152,17 @@ In this iteration the backend was extended to support full CRUD operations for p
 - Added corresponding repository methods
 - Added tests
 - Added endpoint to list all categories (and their German translations) to make them available for selection in the client, see `CategoryController`.
+
+## Iteration 9: Added user profile and spring security (OAuth2 with Auth0)
+
+- Added auth0 dependency to `pom.xml`
+- Configuration of auth0 in `applications.properties`
+  - Use your own issuer and audience values when copying
+  - also available: logging config for more verbose spring security logging to debug errors
+- Enabling OAuth2 / Spring Security in `SecurityConfig.java`.
+- Added `User` entity and repository
+- Loading initial users in `DataLoader`.
+  - When copying this, create users in Auth0 first and insert their OAuthID to the DataLoader
+- New endpoint `/api/profile` via `ProfileController`.
+  - called with a valid bearer token, it loads the user data from the backend
+- Added respective `ProfileControllerTest` to test functionality
