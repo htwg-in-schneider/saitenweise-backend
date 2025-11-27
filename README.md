@@ -165,3 +165,7 @@ In this iteration the backend was extended to support full CRUD operations for p
   - When copying this, create users in Auth0 first and insert their OAuthID to the DataLoader
 - New endpoint `/api/profile` via `ProfileController`.
   - called with a valid bearer token, it loads the user data from the backend
+
+## Iteration 10: Requiring admin privileges for product creation, update and deletion
+
+- TODO ProfileControllerTest schreiben
