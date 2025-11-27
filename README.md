@@ -166,3 +166,9 @@ In this iteration the backend was extended to support full CRUD operations for p
 - New endpoint `/api/profile` via `ProfileController`.
   - called with a valid bearer token, it loads the user data from the backend
 - Added respective `ProfileControllerTest` to test functionality
+
+## Iteration 10: Requiring admin privileges for product creation, update and deletion
+
+- Updated `SecurityConfig.java` to require authenticated access to POST, PUT, and DELETE methods on `/api/product/**`
+- Checking for ADMIN role for callers of POST, PUT, and DELETE methods on `/api/product/**` in `ProductController.java`
+- Adapted `ProductControllerTest.java`: The respective endpoints are called with a JWT

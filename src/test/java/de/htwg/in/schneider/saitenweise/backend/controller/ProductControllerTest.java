@@ -1,37 +1,43 @@
 package de.htwg.in.schneider.saitenweise.backend.controller;
 
-import de.htwg.in.schneider.saitenweise.backend.model.Category;
-import de.htwg.in.schneider.saitenweise.backend.model.Product;
-import de.htwg.in.schneider.saitenweise.backend.repository.ProductRepository;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import java.util.Optional;
+import de.htwg.in.schneider.saitenweise.backend.model.Category;
+import de.htwg.in.schneider.saitenweise.backend.model.Product;
+import de.htwg.in.schneider.saitenweise.backend.model.Role;
+import de.htwg.in.schneider.saitenweise.backend.model.User;
+import de.htwg.in.schneider.saitenweise.backend.repository.ProductRepository;
+import de.htwg.in.schneider.saitenweise.backend.repository.UserRepository;
 
 /**
- * Integration tests for ProductController. Test both the REST endpoints and the database.
+ * Integration tests for ProductController. Test both the REST endpoints and the
+ * database.
  */
 @SpringBootTest
-@Profile("test")
+@ActiveProfiles("test")
 public class ProductControllerTest {
 
     private MockMvc mockMvc;
@@ -39,12 +45,25 @@ public class ProductControllerTest {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @BeforeEach
     public void setUp(WebApplicationContext webApplicationContext) {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .apply(springSecurity())
                 .build();
         // Clear the repository before each test
         productRepository.deleteAll();
+
+        // add an admin user for tests that require admin privileges
+        userRepository.deleteAll();
+        User adminUser = new User();
+        adminUser.setName("Admin User");
+        adminUser.setEmail("admin@example.com");
+        adminUser.setOauthId("auth0|admin");
+        adminUser.setRole(Role.ADMIN);
+        userRepository.save(adminUser);
     }
 
     @Test
@@ -203,6 +222,7 @@ public class ProductControllerTest {
                 + "\"category\":\"VIOLA\",\"price\":500.0,\"imageUrl\":\"https://example.com/viola.jpg\"}";
 
         MvcResult mvcResult = mockMvc.perform(post("/api/product")
+                .with(jwt().jwt(jwt -> jwt.claim("sub", "auth0|admin"))) // simulate admin user
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(productPayload))
                 // THEN (1): Status is OK and product details are correct
@@ -245,6 +265,7 @@ public class ProductControllerTest {
         String updatePayload = "{\"title\":\"Updated Cello\",\"description\":\"A refurbished cello with modern features.\","
                 + "\"category\":\"CELLO\",\"price\":700.0,\"imageUrl\":\"https://example.com/updated_cello.jpg\"}";
         mockMvc.perform(put("/api/product/" + id)
+                .with(jwt().jwt(jwt -> jwt.claim("sub", "auth0|admin"))) // simulate admin user
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(updatePayload))
                 // THEN (1): Status is OK and updated product details are correct
@@ -277,7 +298,8 @@ public class ProductControllerTest {
         product = productRepository.save(product);
 
         // WHEN: The product is deleted via REST endpoint
-        mockMvc.perform(delete("/api/product/" + product.getId()))
+        mockMvc.perform(delete("/api/product/" + product.getId())
+                .with(jwt().jwt(jwt -> jwt.claim("sub", "auth0|admin")))) // simulate admin user
                 // THEN (1): Status is No Content
                 .andExpect(status().isNoContent());
 
