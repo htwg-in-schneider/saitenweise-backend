@@ -1,0 +1,41 @@
+meta {
+  name: order
+  type: http
+  seq: 11
+}
+
+post {
+  url: http://localhost:8081/api/order
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: insert here
+}
+
+body:json {
+  {
+    "items": [
+      {
+        "productId": 1,
+        "quantity": 3
+      },
+      {
+        "productId": 3,
+        "quantity": 1
+      }
+    ],
+    "address": {
+      "street": "Rheingutstraße 10",
+      "city": "Konstanz",
+      "zipCode": "78462",
+      "country": "Germany"
+    }
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

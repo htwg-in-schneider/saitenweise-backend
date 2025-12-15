@@ -172,3 +172,14 @@ In this iteration the backend was extended to support full CRUD operations for p
 - Updated `SecurityConfig.java` to require authenticated access to POST, PUT, and DELETE methods on `/api/product/**`
 - Checking for ADMIN role for callers of POST, PUT, and DELETE methods on `/api/product/**` in `ProductController.java`
 - Adapted `ProductControllerTest.java`: The respective endpoints are called with a JWT
+
+## Iteration 11: Order Processing and Email Notifications
+
+- Implemented **very simple** order processing by sending a mail to the buyer
+- Main logic in `OrderController`, 
+  - accepts Data in `dto.OrderRequest` format, see example request in `order.bru` (Bruno)
+  - uses `JavaMailSender`
+    - available via `spring-boot-starter-mail` in `pom.xml`
+    - configured in `application.properties` - use your own settings, specify environment variables `SPRING_MAIL_USERNAME` and `SPRING_MAIL_PASSWORD`
+    - **IMPORTANT**: Mail sending will **not** work on render.com since it is blocking outgoing SMTP requests. Some REST email service can be used instead.
+- Updated `SecurityConfig` to protect the `/api/order` endpoint, requiring authentication.

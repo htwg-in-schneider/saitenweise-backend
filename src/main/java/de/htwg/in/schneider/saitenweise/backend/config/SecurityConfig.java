@@ -21,6 +21,7 @@ public class SecurityConfig {
                 .cors(withDefaults())
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/api/profile").authenticated()
+                        .requestMatchers("/api/order").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/product", "/api/product/*").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/api/product/*").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/api/product/*").authenticated()
