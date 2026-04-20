@@ -26,7 +26,8 @@ public class DataLoader {
     private static final Logger LOGGER = LoggerFactory.getLogger(DataLoader.class);
 
     @Bean
-    public CommandLineRunner loadData(UserRepository userRepository, ProductRepository productRepository, ReviewRepository reviewRepository) {
+    public CommandLineRunner loadData(UserRepository userRepository, ProductRepository productRepository,
+            ReviewRepository reviewRepository) {
         return args -> {
             loadInitialUsers(userRepository);
 
@@ -41,8 +42,10 @@ public class DataLoader {
     }
 
     private void loadInitialUsers(UserRepository userRepository) {
-        upsertUser(userRepository, "Johannes Schneider", "jsdump123+1@gmail.com", "auth0|69248a03c95661c67b55fe61", Role.REGULAR);
-        upsertUser(userRepository, "Admin User", "jsdump123+admin@gmail.com", "auth0|6925d3052f196223d506f863", Role.ADMIN);
+        upsertUser(userRepository, "Johannes Schneider", "jsdump123+1@gmail.com", "auth0|69248a03c95661c67b55fe61",
+                Role.REGULAR);
+        upsertUser(userRepository, "Admin User", "jsdump123+admin@gmail.com", "auth0|6925d3052f196223d506f863",
+                Role.ADMIN);
     }
 
     private void upsertUser(UserRepository userRepository, String name, String email, String oauthId, Role role) {
@@ -88,7 +91,85 @@ public class DataLoader {
         strings.setPrice(30.00);
         strings.setImageUrl("https://neshanjo.github.io/saitenweise-images/accessory_violin_strings.jpg");
 
-        productRepository.saveAll(Arrays.asList(violin, doubleBass, strings));
+        Product celloBlack = new Product();
+        celloBlack.setTitle("Cello Carbon-Optik Black");
+        celloBlack.setDescription("Ein modernes Cello in edlem Schwarz. Robuste Bauweise mit klarem, kräftigem Klang.");
+        celloBlack.setCategory(Category.CELLO);
+        celloBlack.setPrice(1850.00);
+        celloBlack.setImageUrl("https://neshanjo.github.io/saitenweise-images/cello_black.jpg");
+
+        Product celloCracked = new Product();
+        celloCracked.setTitle("Cello 'Vintage' mit Charakter");
+        celloCracked.setDescription(
+                "Dieses Instrument hat Geschichte und einige Risse, die aber professionell repariert wurden. " + 
+                "Ein Bogen ist mit dabei. Diese muss aber neu bespannt werden.");
+        celloCracked.setCategory(Category.CELLO);
+        celloCracked.setPrice(1450.00);
+        celloCracked.setImageUrl("https://neshanjo.github.io/saitenweise-images/cello_cracked.jpg");
+
+        Product doubleBassFlames = new Product();
+        doubleBassFlames.setTitle("Kontrabass Rockabilly Fire");
+        doubleBassFlames.setDescription(
+                "Heißer Sound für Slap-Bass-Enthusiasten. Mit handgemaltem Flammen-Design ein echter Hingucker.");
+        doubleBassFlames.setCategory(Category.DOUBLE_BASS);
+        doubleBassFlames.setPrice(2900.00);
+        doubleBassFlames.setImageUrl("https://neshanjo.github.io/saitenweise-images/doublebass_flames.jpg");
+
+        // Viola Beginner
+        Product violaBeginner = new Product();
+        violaBeginner.setTitle("Bratsche Schülermodell");
+        violaBeginner.setDescription("Die perfekte Einstiegs-Viola mit leichter Ansprache und inklusivem Kinnhalter.");
+        violaBeginner.setCategory(Category.VIOLA);
+        violaBeginner.setPrice(650.00);
+        violaBeginner.setImageUrl("https://neshanjo.github.io/saitenweise-images/viola_beginner.jpg");
+
+        // Viola Profi
+        Product violaPro = new Product();
+        violaPro.setTitle("Bratsche Solistenmodell");
+        violaPro.setDescription(
+                "Handgefertigte Viola aus ausgesuchten Tonhölzern für einen dunklen, warmen und tragenden Ton.");
+        violaPro.setCategory(Category.VIOLA);
+        violaPro.setPrice(2400.00);
+        violaPro.setImageUrl("https://neshanjo.github.io/saitenweise-images/viola_pro.jpg");
+
+        // Geige Beginner
+        Product violinBeginner = new Product();
+        violinBeginner.setTitle("Geigenset für Anfänger");
+        violinBeginner.setDescription(
+                "Komplettes Set inklusive Bogen und Koffer. Alles, was man für die erste Unterrichtsstunde braucht.");
+        violinBeginner.setCategory(Category.VIOLIN);
+        violinBeginner.setPrice(399.00);
+        violinBeginner.setImageUrl("https://neshanjo.github.io/saitenweise-images/violin_beginner.jpg");
+
+        // Cello Saiten (Zubehör)
+        Product celloStrings = new Product();
+        celloStrings.setTitle("Premium Cello-Saitensatz");
+        celloStrings.setDescription("Präzisionsgesponnene Stahlsaiten für höchste Brillanz und Langlebigkeit.");
+        celloStrings.setCategory(Category.ACCESSORIES);
+        celloStrings.setPrice(125.00);
+        celloStrings.setImageUrl("https://neshanjo.github.io/saitenweise-images/accessory_cello_strings.jpg");
+
+        // Kolophonium (Zubehör)
+        Product rosin = new Product();
+        rosin.setTitle("Kontrabass-Kolophonium Schrummel");
+        rosin.setDescription(
+                "Extra haftstarkes Kolophonium, speziell für die dicken Saiten des Kontrabasses entwickelt.");
+        rosin.setCategory(Category.ACCESSORIES);
+        rosin.setPrice(15.50);
+        rosin.setImageUrl("https://neshanjo.github.io/saitenweise-images/accessory_doublebass_rosin.jpg");
+
+        productRepository.saveAll(Arrays.asList(
+                violin,
+                doubleBass,
+                strings,
+                celloBlack,
+                celloCracked,
+                doubleBassFlames,
+                violaBeginner,
+                violaPro,
+                violinBeginner,
+                celloStrings,
+                rosin));
 
         // Add reviews
         Review r1a = new Review();
