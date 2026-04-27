@@ -19,3 +19,10 @@ The application will start on `http://localhost:8081`.
 - basic project configuration in `application.properties`
 - a first simple REST-Controller `ProductController` for GET request to `/api/product` that returns a list of strings.
 - test e.g. with using `curl`: `curl http://localhost:8081/api/product` or bruno (see bruno project in `src/test/bruno`)
+
+### Iteration 1b: JSON (de)serialization
+
+- REST-Controller `ProductController` supporting GET and POST requests to `/api/product`
+- using Java Objects instead of strings
+- test GET with using `curl`: `curl http://localhost:8081/api/product`
+- test POST with `curl -X POST http://localhost:8081/api/product -H 'Content-Type: application/json' -d '{"title":"Bratsche","description":"macht bratsch"}'` or in bruno
