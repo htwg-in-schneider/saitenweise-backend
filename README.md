@@ -14,12 +14,15 @@ The application will start on `http://localhost:8081`.
 
 ## Iterations
 
-### Iteration 0: Added Dockerfile
-
-- this is not needed yet but helpfu
-
 ### Iteration 1a: First REST Controller
 
 - basic project configuration in `application.properties`
 - a first simple REST-Controller `ProductController` for GET request to `/api/product` that returns a list of strings.
 - test e.g. with using `curl`: `curl http://localhost:8081/api/product`
+
+### Iteration 1b: JSON (de)serialization
+
+- REST-Controller `ProductController` supporting GET and POST requests to `/api/product`
+- using Java Objects instead of strings
+- test GET with using `curl`: `curl http://localhost:8081/api/product`
+- test POST with `curl -X POST http://localhost:8081/api/product -H 'Content-Type: application/json' -d '{"name":"Bratsche","description":"macht bratsch"}'`
