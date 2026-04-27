@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import de.htwg.in.schneider.saitenweise.backend.model.Category;
+import de.htwg.in.schneider.saitenweise.backend.model.Product;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -14,34 +17,39 @@ import java.util.List;
 @RequestMapping("/api/product")
 public class ProductController {
 
-    public static class Product {
-        private String name;
-        private String description;
-
-        public Product(String name, String description) {
-            this.name = name;
-            this.description = description;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-    }
-
     @GetMapping
     public List<Product> getProducts() {
-        return Arrays.asList(new Product("Geige Modell Paganini", "eine hochwertige Geige"),
-                new Product("Kontrabass Modell Maestro", "ein toller Kontrabass"),
-                new Product("Geigensaiten Cat Screaming", "Anfänger-Geigensaiten"));
+        Product violin = new Product();
+        violin.setId(1);
+        violin.setTitle("Geige Modell Paganini");
+        violin.setDescription("Eine hochwertige Geige, welche schon alle Konzerthäuser dieser Welt gesehen hat.");
+        violin.setCategory(Category.VIOLIN);
+        violin.setPrice(1200.00);
+        violin.setImageUrl("https://neshanjo.github.io/saitenweise-images/violin_pro.jpg");
+
+        Product doubleBass = new Product();
+        doubleBass.setId(2);
+        doubleBass.setTitle("Kontrabass Modell Maestro");
+        doubleBass
+                .setDescription("Ein professioneller Kontrabass, für Klassik- und Jazz geeignet, optimal eingestellt.");
+        doubleBass.setCategory(Category.DOUBLE_BASS);
+        doubleBass.setPrice(3500.00);
+        doubleBass.setImageUrl("https://neshanjo.github.io/saitenweise-images/doublebass_pro.jpg");
+
+        Product strings = new Product();
+        strings.setId(3);
+        strings.setTitle("Geigensaiten Cat Screaming");
+        strings.setDescription("Extra dick und robust. Endlich können Sie sich gegen Ihre Katze wehren.");
+        strings.setCategory(Category.ACCESSORIES);
+        strings.setPrice(30.00);
+        strings.setImageUrl("https://neshanjo.github.io/saitenweise-images/accessory_violin_strings.jpg");
+
+        return Arrays.asList(violin, doubleBass, strings);
     }
 
     @PostMapping
     public ResponseEntity<String> createProduct(@RequestBody Product product) {
-        System.out.println("Controller called for product: " + product.getName() + " - " + product.getDescription());
-        return ResponseEntity.ok("POST successful");
+        System.out.println("Controller called for product: " + product);
+        return ResponseEntity.ok("POST successful, however product creation is not implemented yet.");
     }
 }
