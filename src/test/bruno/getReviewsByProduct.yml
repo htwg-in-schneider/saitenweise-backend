@@ -1,11 +1,11 @@
 info:
-  name: deleteProduct
+  name: getReviewsByProduct
   type: http
-  seq: 6
+  seq: 8
 
 http:
-  method: DELETE
-  url: http://localhost:8081/api/product/2
+  method: GET
+  url: http://localhost:8081/api/review/product/1
   auth: inherit
 
 settings:

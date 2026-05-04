@@ -64,3 +64,26 @@ In this iteration the backend was extended to support full CRUD operations for p
   - DELETE /api/product/{id} — delete a product (204 on success, 404 if not found)
 - No Validation: Entities are not validated before written to the database!
 - Example request to be used in bruno were added to `src/test/bruno`
+
+## Iteration 5: Added 1:n relation Product - Review
+
+- Added `Review` entity with bidirectional relation to `Product`, see `Product#reviews` and `Review#product` with the corresponding Annotations.
+- **Important**: In order to avoid endless recursion when serializing these types to JSON in the rest controller, `Product#reviews` has `@JsonIgnore`. Hence, all REST endpoints returning products do not include the reviews of a product.
+  - To get the reviews of a product, you have to call `/api/review/product/<id of product>`.
+- Also note the `@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })` on every Entity which avoids problems with serialization JPA entities to JSON.
+- Added Create, Read and Delete for Reviews in `ReviewController`.
+  - To create a review for the product with id 1, POST this content to `/api/review`:
+
+      ```json
+      {
+         "userName": "Meckerer",
+         "text": "ziemlich schlecht",
+         "stars": 1,
+         "product": {
+            "id": 1
+         }
+      }
+      ```
+
+  - this and other example requests can be found in `src/test/bruno` which can be opened with the [Bruno API Client](https://www.usebruno.com/).
+- In `DataLoader`, some example reviews are added to the database.
