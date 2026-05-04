@@ -10,8 +10,11 @@ http:
     type: json
     data: |-
       {
-        "title": "Bratsche",
-        "description": "macht bratsch"
+        "title": "Bratsche Modell WebTech",
+        "description": "Spielt am liebsten mit HTML und CSS.",
+        "category": "VIOLA",
+        "price": 200.0,
+        "imageUrl": "https://neshanjo.github.io/saitenweise-images/viola_beginner.jpg"
       }
   auth: inherit
 

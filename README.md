@@ -51,4 +51,16 @@ In this iteration, the application was updated to integrate with a database. The
 4. **Data Loader**:
    - `config.DataLoader` is a CommandLineRunner that is run during application startup and used to fill initial data into the database. It is only run when no products are defined yet.
 5. **Product Controller**:
-   - Updated the `/api/product` endpoint to fetch products from the database instead of returning hardcoded values.
+
+### Iteration 4: CRUD for Products
+
+In this iteration the backend was extended to support full CRUD operations for products.
+
+- CRUD Endpoints (REST)
+  - GET /api/product — list all products
+  - GET /api/product/{id} — fetch a single product (404 if not found)
+  - POST /api/product — create a product (returns 201)
+  - PUT /api/product/{id} — update an existing product (404 if not found)
+  - DELETE /api/product/{id} — delete a product (204 on success, 404 if not found)
+- No Validation: Entities are not validated before written to the database!
+- Example request to be used in bruno were added to `src/test/bruno`
