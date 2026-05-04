@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import de.htwg.in.schneider.saitenweise.backend.model.Category;
 import de.htwg.in.schneider.saitenweise.backend.model.Product;
 import de.htwg.in.schneider.saitenweise.backend.repository.ProductRepository;
 
@@ -23,8 +24,17 @@ public class ProductController {
     private ProductRepository productRepository;
 
     @GetMapping
-    public List<Product> getProducts() {
-        return productRepository.findAll();
+    public List<Product> getProducts(@RequestParam(required = false) String name, 
+        @RequestParam(required = false) Category category) {
+        if (name != null && category != null) {
+            return productRepository.findByTitleContainingIgnoreCaseAndCategory(name, category);
+        } else if (name != null) {
+            return productRepository.findByTitleContainingIgnoreCase(name);
+        } else if (category != null) {
+            return productRepository.findByCategory(category);
+        } else {
+            return productRepository.findAll();
+        }
     }
 
     @PostMapping
