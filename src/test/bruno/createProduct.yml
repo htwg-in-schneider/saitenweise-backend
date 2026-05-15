@@ -16,7 +16,9 @@ http:
         "price": 200.0,
         "imageUrl": "https://neshanjo.github.io/saitenweise-images/viola_beginner.jpg"
       }
-  auth: inherit
+  auth:
+    type: bearer
+    token: ADD TOKEN OF ADMIN USER
 
 settings:
   encodeUrl: true
