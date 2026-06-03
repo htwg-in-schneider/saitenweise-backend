@@ -1,0 +1,17 @@
+info:
+  name: getAiSuggestion
+  type: http
+  seq: 14
+
+http:
+  method: GET
+  url: http://localhost:8081/api/product/1/suggest
+  auth: inherit
+  headers: []
+  body: null
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

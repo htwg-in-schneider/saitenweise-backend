@@ -113,3 +113,14 @@ In this iteration the backend was extended to support full CRUD operations for p
 - Updated `SecurityConfig.java` to require authenticated access to POST, PUT, and DELETE methods on `/api/product/**`
 - Checking for ADMIN role for callers of POST, PUT, and DELETE methods on `/api/product/**` in `ProductController.java`
 - Adapted `ProductControllerTest.java`: The respective endpoints are called with a JWT
+
+### Iteration 9: AI-powered music style & recommendation suggestions
+
+- New endpoint `/api/product/{id}/suggest` in `ProductController` that fetches a product, sends its data to an OpenAI-compatible API (e.g. Ollama), and returns AI-generated recommendations.
+- Response JSON contains `musicStyle` (comma-separated list of suitable music styles) and `recommendedProducts` (creative text with general product ideas, not referencing actual database products).
+- New client model classes for the OpenAI API in `clientmodel/`: `ChatCompletionsRequest`, `ChatCompletionsResponse`, `ChatMessage` — only include the fields actually used, all inner classes marked with `@JsonIgnoreProperties(ignoreUnknown = true)`.
+- Dependency `spring-boot-starter-webflux` added to `pom.xml` for `WebClient`.
+- Configurable via `application.properties`: `ai.suggestion.api-url`, `ai.suggestion.api-key`, `ai.suggestion.model`, `ai.suggestion.timeout-seconds` — no default fallback values; missing properties cause startup failure.
+- Externalized prompt template in `resources/ai-suggestion-prompt.txt` (in German) for easy editing without recompiling.
+- Synchronous blocking call semantics: `WebClient.bodyToMono().block()`. AI API failure returns 502 Bad Gateway.
+- Bruno test request added in `src/test/bruno/getAiSuggestion.yml`.

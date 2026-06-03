@@ -1,4 +1,5 @@
 package de.htwg.in.schneider.saitenweise.backend.controller;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -18,12 +19,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import de.htwg.in.schneider.saitenweise.backend.controller.dto.AiSuggestionResponse;
 import de.htwg.in.schneider.saitenweise.backend.model.Category;
 import de.htwg.in.schneider.saitenweise.backend.model.Product;
 import de.htwg.in.schneider.saitenweise.backend.model.User;
 import de.htwg.in.schneider.saitenweise.backend.model.Role;
 import de.htwg.in.schneider.saitenweise.backend.repository.ProductRepository;
 import de.htwg.in.schneider.saitenweise.backend.repository.UserRepository;
+import de.htwg.in.schneider.saitenweise.backend.service.AiSuggestionService;
 
 @RestController
 @RequestMapping("/api/product")
@@ -37,6 +40,8 @@ public class ProductController {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private AiSuggestionService aiSuggestionService;
 
     private boolean userFromJwtIsAdmin(Jwt jwt) {
         if (jwt == null || jwt.getSubject() == null) {
@@ -83,8 +88,8 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@AuthenticationPrincipal Jwt jwt, 
-        @PathVariable Long id, @RequestBody Product productDetails) {
+    public ResponseEntity<Product> updateProduct(@AuthenticationPrincipal Jwt jwt,
+            @PathVariable Long id, @RequestBody Product productDetails) {
         if (!userFromJwtIsAdmin(jwt)) {
             return ResponseEntity.status(403).build();
         }
@@ -105,7 +110,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteProduct(@AuthenticationPrincipal Jwt jwt,@PathVariable Long id) {
+    public ResponseEntity<Object> deleteProduct(@AuthenticationPrincipal Jwt jwt, @PathVariable Long id) {
         if (!userFromJwtIsAdmin(jwt)) {
             return ResponseEntity.status(403).build();
         }
@@ -126,6 +131,26 @@ public class ProductController {
             return ResponseEntity.ok(opt.get());
         } else {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/{id}/suggest")
+    public ResponseEntity<Object> getSuggest(@PathVariable Long id) {
+        Optional<Product> opt = productRepository.findById(id);
+        if (!opt.isPresent()) {
+            LOG.warn("Product with id " + id + " not found for AI suggestion");
+            return ResponseEntity.status(404).body("Product not found");
+        }
+
+        Product product = opt.get();
+
+        try {
+            AiSuggestionResponse result = aiSuggestionService.getSuggestion(product);
+            LOG.info("Successfully retrieved AI suggestion for product " + id);
+            return ResponseEntity.ok(result);
+        } catch (RuntimeException e) {
+            LOG.error("AI call failed for product " + id, e);
+            return ResponseEntity.status(502).body("AI service unavailable");
         }
     }
 }

@@ -1,0 +1,10 @@
+Du bist ein Experte für Musikinstrumente. Erstelle auf Basis der folgenden Produktdaten ein JSON mit zwei Feldern:
+
+"musicStyle": durch Komma getrennte Liste von Musikstilen, für die das Instrument geeignet ist (z. B. Klassik, Jazz, Folk, Rockabilly)
+"recommendedProducts": ein kreativer Text mit Empfehlung für andere Produktideen (keine tatsächlichen Produkte aus der Datenbank nennen, sondern kreativ und allgemein bleiben)
+
+Produkt:
+   - Titel: {title}
+   - Kategorie: {category}
+   - Beschreibung: {description}
+   - Preis: {price}
