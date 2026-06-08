@@ -113,3 +113,10 @@ In this iteration the backend was extended to support full CRUD operations for p
 - Updated `SecurityConfig.java` to require authenticated access to POST, PUT, and DELETE methods on `/api/product/**`
 - Checking for ADMIN role for callers of POST, PUT, and DELETE methods on `/api/product/**` in `ProductController.java`
 - Adapted `ProductControllerTest.java`: The respective endpoints are called with a JWT
+
+### Iteration 9: Deploy to production
+
+- Added GitHub Actions workflow for Maven build verification
+  - compiles project and runs tests
+  - see `.github/workflows/verify.yml`
+- Added `Dockerfile` in root directory
