@@ -1,0 +1,38 @@
+info:
+  name: postOrder
+  type: http
+  seq: 14
+
+http:
+  method: POST
+  url: http://localhost:8081/api/order
+  body:
+    type: json
+    data: |-
+      {
+        "items": [
+          {
+            "productId": 1,
+            "quantity": 3
+          },
+          {
+            "productId": 3,
+            "quantity": 1
+          }
+        ],
+        "address": {
+          "street": "Rheingutstraße 10",
+          "city": "Konstanz",
+          "zipCode": "78462",
+          "country": "Germany"
+        }
+      }
+  auth:
+    type: bearer
+    token: insert token
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
